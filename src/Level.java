@@ -84,7 +84,7 @@ public class Level {
             return items;
         }
 
-        public String displaytems() {
+        public String displayItems() {
             String output = "";
             for (Item i : items) {
                 output += i.getName() + ", ";
