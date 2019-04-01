@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Level {
     private HashMap<String, Room> nodes;
@@ -44,12 +43,14 @@ public class Level {
             this.name = name;
             neighbors = new HashMap<>();
             description = "";
+            items = new ArrayList<>();
         }
 
         public Room(String name, String description) {
             this.name = name;
             neighbors = new HashMap<>();
             this.description = description;
+            items = new ArrayList<>();
         }
 
         public void setDescription(String description) {
