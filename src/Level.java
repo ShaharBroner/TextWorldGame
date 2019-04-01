@@ -38,6 +38,7 @@ public class Level {
         private String name;
         private HashMap<String, Room> neighbors;
         private String description;
+        private ArrayList<Item> items;
 
         public Room(String name) {
             this.name = name;
@@ -77,6 +78,51 @@ public class Level {
 
         public Room getNeighbor(String name) {
             return neighbors.get(name);
+        }
+
+        public ArrayList<Item> getItems() {
+            return items;
+        }
+
+        public String displaytems() {
+            String output = "";
+            for (Item i : items) {
+                output += i.getName() + ", ";
+            }
+            return output;
+        }
+
+        public void addItem(String name) {
+            Item i = new Item(name);
+            items.add(i);
+        }
+
+        public void addItem(String name, String description) {
+            Item i = new Item(name, description);
+            items.add(i);
+        }
+
+        public void addItem(Item item) {
+            items.add(item);
+        }
+
+        public Item removeItem(String name) {
+            for (Item i : items) {
+                if (i.getName().equals(name)) {
+                    items.remove(i);
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        public boolean destroyItem(String name) {
+            for (Item i : items) {
+                if (i.getName().equals(name)) {
+                    return items.remove(i);
+                }
+            }
+            return false;
         }
     }
 }
