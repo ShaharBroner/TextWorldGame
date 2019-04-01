@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Player {
-    String name, description;
-    ArrayList<Item> items;
-    Level.Room currentRoom;
+    private String name, description;
+    private ArrayList<Item> items;
+    private Level.Room currentRoom;
 
     public Player(String name, String description) {
         this.name = name;
@@ -52,7 +52,12 @@ public class Player {
         currentRoom = newRoom;
     }
 
-    public boolean moveToRoom(String name){
-        
+    public boolean moveToRoom(String name) {
+        Level.Room nextRoom = currentRoom.getNeighbor(name);
+        if (nextRoom == null) {
+            return false;
+        }
+        setCurrentRoom(nextRoom);
+        return true;
     }
 }
