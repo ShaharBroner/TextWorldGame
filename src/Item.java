@@ -1,5 +1,5 @@
 public class Item {
-    String name, description;
+    private String name, description;
 
     public Item(String name) {
         this.name = name;
