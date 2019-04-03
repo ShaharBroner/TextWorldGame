@@ -5,6 +5,7 @@ public class Chicken extends Creature {
     public Chicken(Level.Room currentRoom) {
         super(currentRoom);
     }
+
     @Override
     public void move() {
         HashMap<String, Level.Room> hmap = currentRoom.getNeighbors();
