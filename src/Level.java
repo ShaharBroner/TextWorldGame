@@ -8,19 +8,19 @@ public class Level {
         nodes = new HashMap<>();
     }
 
-    public void addNode(String name) {
+    public void addRoom(String name) {
         Room n = new Room(name);
         nodes.put(name, n);
     }
 
-    public void addNode(String name, String description) {
+    public void addRoom(String name, String description) {
         Room n = new Room(name, description);
         nodes.put(name, n);
     }
 
     public void addDirectedEdge(String name1, String name2) {
-        Room n1 = getNode(name1);
-        Room n2 = getNode(name2);
+        Room n1 = getRoom(name1);
+        Room n2 = getRoom(name2);
         n1.addNeighbor(n2);
     }
 
@@ -29,7 +29,7 @@ public class Level {
         addDirectedEdge(name2, name1);
     }
 
-    public Room getNode(String name) {
+    public Room getRoom(String name) {
         return nodes.get(name);
     }
 
@@ -79,6 +79,10 @@ public class Level {
 
         public Room getNeighbor(String name) {
             return neighbors.get(name);
+        }
+
+        public HashMap<String, Room> getNeighbors() {
+            return neighbors;
         }
 
         public ArrayList<Item> getItems() {
