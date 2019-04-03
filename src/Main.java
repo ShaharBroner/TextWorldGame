@@ -1,38 +1,61 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Level g = new Level();
-        g.addNode("hall", "A magical passage");
-        g.addNode("closet", "A door to the unknown");
-        g.addNode("dungeon", "Scary");
+        g.addRoom("hall", "A magical passage");
+        g.addRoom("closet", "A door to the unknown");
+        g.addRoom("dungeon", "Scary");
+        g.addRoom("Changaland", "A magical place");
+        g.addRoom("Atlantis", "Under water city");
+        g.addRoom("portal room", "this is interesting");
+        g.addRoom("arena", "where the best of the best fight");
 
         g.addUndirectedEdge("hall", "dungeon");
         g.addUndirectedEdge("hall", "closet");
+        g.addUndirectedEdge("dungeon", "Changaland");
+        g.addUndirectedEdge("closet", "Atlantis");
+        g.addUndirectedEdge("Atlantis", "arena");
+        g.addUndirectedEdge("Changaland", "portal room");
+        g.addDirectedEdge("portal room", "hall");
+        g.addDirectedEdge("portal room", "closet");
+        g.addDirectedEdge("portal room", "dungeon");
+        g.addDirectedEdge("portal room", "Atlantis");
+        g.addDirectedEdge("portal room", "arena");
 
         Player p = new Player("Player 1", "A player");
-        p.setCurrentRoom(g.getNode("hall"));
+        p.setCurrentRoom(g.getRoom("hall"));
 
         Item shirt = new Item("shirt");
         Item ball = new Item("ball", "soccer ball");
         Item key = new Item("key");
-        g.getNode("hall").addItem(key);
-        g.getNode("hall").addItem(ball);
-        g.getNode("closet").addItem(shirt);
-
+        g.getRoom("hall").addItem(key);
+        g.getRoom("hall").addItem(ball);
+        g.getRoom("closet").addItem(shirt);
+        ArrayList<Creature> creatures = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            creatures.add(new Chicken(g.getRoom("portal room")));
+        }
         String response = "";
         Scanner s = new Scanner(System.in);
 
         do {
             System.out.println("You are in the " + p.getCurrentRoom().getName());
+            int chickenCount = 0;
+            for (Creature c : creatures) {
+                if (c instanceof Chicken && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                    chickenCount++;
+                }
+            }
+            System.out.println("You have " + chickenCount + " chicken(s) in you room!");
             System.out.println("What do you want to do?");
             response = s.nextLine();
 
             String[] words = response.split(" ");
 
             if (words[0].equals("go")) {
+                moveCreatures(creatures);
                 String roomName = "";
                 if (words.length >= 2) {
                     roomName = words[1];
@@ -45,21 +68,24 @@ public class Main {
 
                 }
             } else if (words[0].equals("look")) {
+                moveCreatures(creatures);
                 System.out.println(p.getCurrentRoom().getNeighborsNames());
                 System.out.println(p.getCurrentRoom().displayItems());
             } else if (words[0].equals("add")) {
+                moveCreatures(creatures);
                 if (words.length < 3) {
                     System.out.println("Impossible!");
                 } else {
                     if (words[1].equals("room")) {
                         String roomName = words[2];
-                        g.addNode(roomName);
+                        g.addRoom(roomName);
                         g.addUndirectedEdge(p.getCurrentRoom().getName(), roomName);
                         System.out.println("Added path to " + roomName);
                     }
                 }
                 g.addDirectedEdge(p.getCurrentRoom().getName(), response.substring(9));
             } else if (words[0].equals("take")) {
+                moveCreatures(creatures);
                 ArrayList<Item> items = p.getCurrentRoom().getItems();
                 for (Item i : items) {
                     if (words[1].equals(i.getName())) {
@@ -69,6 +95,7 @@ public class Main {
                     }
                 }
             } else if (words[0].equals("drop")) {
+                moveCreatures(creatures);
                 ArrayList<Item> items = p.getItems();
                 for (Item i : items) {
                     if (words[1].equals(i.getName())) {
@@ -81,12 +108,18 @@ public class Main {
                 System.out.println("Goodbye!");
             } else {
                 System.out.println("Type: *go <roomname>* to go to that room");
-                System.out.println("Type: *look* to see all neighbors and items");
+                System.out.println("Type: *look* to see all neighbors and items (and creatures)");
                 System.out.println("Type: *add room <roomname>* to add that room");
                 System.out.println("Type: *take <itemname>* to take an item and remove it from the room");
                 System.out.println("Type: *drop <itemname>* to remove an item and add it to the room");
                 System.out.println("Type: *quit* to quit the game");
             }
         } while (!response.equals("quit"));
+    }
+
+    public static void moveCreatures(ArrayList<Creature> creatures) {
+        for (Creature c : creatures) {
+            c.move();
+        }
     }
 }
