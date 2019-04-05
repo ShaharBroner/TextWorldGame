@@ -146,5 +146,20 @@ public class Level {
             return null;
         }
 
+        public boolean containsNonRandomCreature(Room r, Creature c) {
+            if (c.getCurrentRoom().equals(r)) {
+                return true;
+            }
+            return false;
+        }
+
+        public boolean containsNonRandomCreature(ArrayList<Room> roomList, Creature c) {
+            for (Room current : roomList) {
+                if (c.getCurrentRoom().equals(current)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
