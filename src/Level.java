@@ -129,5 +129,22 @@ public class Level {
             }
             return false;
         }
+
+        public Room containsPlayer(Room r, Player p) {
+            if (p.getCurrentRoom().equals(r)) {
+                return r;
+            }
+            return null;
+        }
+
+        public Room containsPlayer(ArrayList<Room> roomList, Player p) {
+            for (Room current : roomList) {
+                if (p.getCurrentRoom().equals(current)) {
+                    return current;
+                }
+            }
+            return null;
+        }
+
     }
 }
