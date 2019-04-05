@@ -11,6 +11,6 @@ public class Chicken extends Creature {
         HashMap<String, Level.Room> hmap = currentRoom.getNeighbors();
         ArrayList<Level.Room> rooms = new ArrayList<>(hmap.values());
         int random = (int) (Math.random() * rooms.size());
-        currentRoom = rooms.get(random);
+        setCurrentRoom(rooms.get(random));
     }
 }
