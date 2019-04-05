@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
     private String name, description;
@@ -59,5 +60,21 @@ public class Player {
         }
         setCurrentRoom(nextRoom);
         return true;
+    }
+
+    public String lookForCreatures(ArrayList<Creature> creatures) {
+        HashMap<String, Level.Room> hmap = currentRoom.getNeighbors();
+        ArrayList<Level.Room> neighbors = new ArrayList<>(hmap.values());
+        int wumpusCount = 0;
+        int popStarCount = 0;
+        for (Creature c : creatures) {
+            if (currentRoom.containsNonRandomCreature(neighbors, c)) {
+                if (c instanceof Wumpus)
+                    wumpusCount++;
+                if (c instanceof PopStar)
+                    popStarCount++;
+            }
+        }
+        return wumpusCount + " wumpuses and " + popStarCount + " popStars nearby!";
     }
 }
