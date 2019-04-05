@@ -16,6 +16,7 @@ public class PopStar extends Creature {
         Level.Room playerRoom = currentRoom.containsPlayer(rooms, p);
         if (playerRoom != null) {
             setCurrentRoom(playerRoom);
+            return;
         }
         int random = (int) (Math.random() * rooms.size());
         setCurrentRoom(rooms.get(random));
