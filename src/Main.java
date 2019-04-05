@@ -12,6 +12,9 @@ public class Main {
         g.addRoom("portal room", "this is interesting");
         g.addRoom("arena", "where the best of the best fight");
         g.addRoom("mall", "A place for shopping");
+        g.addRoom("space station", "fly to space!");
+        g.addRoom("Krypton", "A special planet");
+        g.addRoom("Gotham", "A dark city");
 
         g.addUndirectedEdge("hall", "dungeon");
         g.addUndirectedEdge("hall", "closet");
@@ -19,6 +22,9 @@ public class Main {
         g.addUndirectedEdge("closet", "Atlantis");
         g.addUndirectedEdge("Atlantis", "arena");
         g.addUndirectedEdge("Changaland", "mall");
+        g.addUndirectedEdge("mall", "Gotham");
+        g.addUndirectedEdge("Gotham", "space station");
+        g.addUndirectedEdge("space station", "Krypton");
         g.addDirectedEdge("Changaland", "portal room");
         g.addDirectedEdge("portal room", "hall");
         g.addDirectedEdge("portal room", "closet");
@@ -32,13 +38,21 @@ public class Main {
         Item shirt = new Item("shirt");
         Item ball = new Item("ball", "soccer ball");
         Item key = new Item("key");
+        Item kryptonite = new Item("kryptonite");
+        Item shinyStone = new Item("shiny stone");
+        Item carrot = new Item("carrot");
+        Item trident = new Item("trident");
+        g.getRoom("Krypton").addItem(kryptonite);
+        g.getRoom("space station").addItem(shinyStone);
+        g.getRoom("Changaland").addItem(carrot);
+        g.getRoom("Atlantis").addItem(trident);
         g.getRoom("hall").addItem(key);
         g.getRoom("hall").addItem(ball);
         g.getRoom("closet").addItem(shirt);
         ArrayList<Creature> creatures = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             creatures.add(new Chicken(g.getRoom("portal room")));
-            if (i % 4 == 0) {
+            if (i % 5 == 0) {
                 creatures.add(new Wumpus(p, g.getRoom("Atlantis")));
                 creatures.add(new PopStar(p, g.getRoom("Atlantis")));
             }
