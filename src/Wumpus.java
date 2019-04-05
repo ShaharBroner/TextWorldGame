@@ -14,10 +14,8 @@ public class Wumpus extends Creature {
         HashMap<String, Level.Room> hmap = currentRoom.getNeighbors();
         ArrayList<Level.Room> rooms = new ArrayList<>(hmap.values());
         Level.Room playerRoom = currentRoom.containsPlayer(rooms, p);
-        if (!playerRoom.equals(null)) {
-            if (hmap.size() > 1) {
-                hmap.remove(playerRoom);
-            }
+        if (playerRoom != null) {
+            rooms.remove(playerRoom);
         }
         int random = (int) (Math.random() * rooms.size());
         setCurrentRoom(rooms.get(random));
