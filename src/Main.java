@@ -11,13 +11,15 @@ public class Main {
         g.addRoom("Atlantis", "Under water city");
         g.addRoom("portal room", "this is interesting");
         g.addRoom("arena", "where the best of the best fight");
+        g.addRoom("mall", "A place for shopping");
 
         g.addUndirectedEdge("hall", "dungeon");
         g.addUndirectedEdge("hall", "closet");
         g.addUndirectedEdge("dungeon", "Changaland");
         g.addUndirectedEdge("closet", "Atlantis");
         g.addUndirectedEdge("Atlantis", "arena");
-        g.addUndirectedEdge("Changaland", "portal room");
+        g.addUndirectedEdge("Changaland", "mall");
+        g.addDirectedEdge("Changaland", "portal room");
         g.addDirectedEdge("portal room", "hall");
         g.addDirectedEdge("portal room", "closet");
         g.addDirectedEdge("portal room", "dungeon");
@@ -36,6 +38,10 @@ public class Main {
         ArrayList<Creature> creatures = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             creatures.add(new Chicken(g.getRoom("portal room")));
+            if (i % 4 == 0) {
+                creatures.add(new Wumpus(p, g.getRoom("Atlantis")));
+                creatures.add(new PopStar(p, g.getRoom("Atlantis")));
+            }
         }
         String response = "";
         Scanner s = new Scanner(System.in);
@@ -43,19 +49,25 @@ public class Main {
         do {
             System.out.println("You are in the " + p.getCurrentRoom().getName());
             int chickenCount = 0;
+            int wumpusCount = 0;
+            int popStarCount = 0;
             for (Creature c : creatures) {
                 if (c instanceof Chicken && c.getCurrentRoom().equals(p.getCurrentRoom())) {
                     chickenCount++;
+                } else if (c instanceof Wumpus && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                    wumpusCount++;
+                } else if (c instanceof PopStar && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                    popStarCount++;
                 }
             }
-            System.out.println("You have " + chickenCount + " chicken(s) in you room!");
+            System.out.println("You have " + chickenCount + " chicken(s), " + wumpusCount + " Wumpuses, and " + popStarCount + " popStars in you room!");
+            System.out.println(p.lookForCreatures(creatures));
             System.out.println("What do you want to do?");
             response = s.nextLine();
 
             String[] words = response.split(" ");
 
             if (words[0].equals("go")) {
-                moveCreatures(creatures);
                 String roomName = "";
                 if (words.length >= 2) {
                     roomName = words[1];
@@ -67,6 +79,7 @@ public class Main {
                     System.out.println("You moved to " + roomName);
 
                 }
+                moveCreatures(creatures);
             } else if (words[0].equals("look")) {
                 moveCreatures(creatures);
                 System.out.println(p.getCurrentRoom().getNeighborsNames());
