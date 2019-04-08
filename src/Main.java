@@ -1,9 +1,15 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
+    private static HashMap<String, Command> commands;
+    private static Player p;
+    private static Level g;
+
     public static void main(String[] args) {
-        Level g = new Level();
+        g = new Level();
+        initCommands();
         g.addRoom("hall", "A magical passage");
         g.addRoom("closet", "A door to the unknown");
         g.addRoom("dungeon", "Scary");
@@ -32,7 +38,7 @@ public class Main {
         g.addDirectedEdge("portal room", "Atlantis");
         g.addDirectedEdge("portal room", "arena");
 
-        Player p = new Player("Player 1", "A player");
+        p = new Player("Player 1", "A player");
         p.setCurrentRoom(g.getRoom("hall"));
 
         Item shirt = new Item("shirt");
@@ -142,6 +148,15 @@ public class Main {
                 System.out.println("Type: *quit* to quit the game");
             }
         } while (!response.equals("quit"));
+    }
+
+    private static void initCommands() {
+        commands.put("go", new GoCommand(p));
+        commands.put("look", new LookCommand(p));
+        commands.put("add room", new AddRoomCommand(p));
+        commands.put("take", new TakeCommand(g));
+        commands.put("drop", new DropCommand(g));
+        commands.put("quit", new QuitCommand());
     }
 
     public static void moveCreatures(ArrayList<Creature> creatures) {
