@@ -66,25 +66,14 @@ public class Main {
         String response = "";
         Scanner s = new Scanner(System.in);
 
+
         do {
             System.out.println("You are in the " + p.getCurrentRoom().getName());
-            int chickenCount = 0;
-            int wumpusCount = 0;
-            int popStarCount = 0;
-            for (Creature c : creatures) {
-                if (c instanceof Chicken && c.getCurrentRoom().equals(p.getCurrentRoom())) {
-                    chickenCount++;
-                } else if (c instanceof Wumpus && c.getCurrentRoom().equals(p.getCurrentRoom())) {
-                    wumpusCount++;
-                } else if (c instanceof PopStar && c.getCurrentRoom().equals(p.getCurrentRoom())) {
-                    popStarCount++;
-                }
-            }
-            System.out.println("You have " + chickenCount + " chicken(s), " + wumpusCount + " Wumpuses, and " + popStarCount + " popStars in you room!");
+            displayCreaturesInRoom(creatures);
             System.out.println(p.lookForCreatures(creatures));
             System.out.println("What do you want to do?");
             response = s.nextLine();
-
+            Command command = lookUpCommand(response);
             String[] words = response.split(" ");
 
             if (words[0].equals("go")) {
@@ -150,12 +139,19 @@ public class Main {
         } while (!response.equals("quit"));
     }
 
+    private static Command lookUpCommand(String response) {
+        String[] words = response.split(" ");
+        String commandWord = words[0];
+        Command c = commands.get(commandWord);
+        if (c == null)
+    }
+
     private static void initCommands() {
         commands.put("go", new GoCommand(p));
         commands.put("look", new LookCommand(p));
-        commands.put("add room", new AddRoomCommand(p));
-        commands.put("take", new TakeCommand(g));
-        commands.put("drop", new DropCommand(g));
+        commands.put("add room", new AddRoomCommand(p, g));
+        commands.put("take", new TakeCommand(p));
+        commands.put("drop", new DropCommand(p));
         commands.put("quit", new QuitCommand());
     }
 
@@ -163,5 +159,21 @@ public class Main {
         for (Creature c : creatures) {
             c.move();
         }
+    }
+
+    public static void displayCreaturesInRoom(ArrayList<Creature> creatures) {
+        int chickenCount = 0;
+        int wumpusCount = 0;
+        int popStarCount = 0;
+        for (Creature c : creatures) {
+            if (c instanceof Chicken && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                chickenCount++;
+            } else if (c instanceof Wumpus && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                wumpusCount++;
+            } else if (c instanceof PopStar && c.getCurrentRoom().equals(p.getCurrentRoom())) {
+                popStarCount++;
+            }
+        }
+        System.out.println("You have " + chickenCount + " chicken(s), " + wumpusCount + " Wumpuses, and " + popStarCount + " popStars in you room!");
     }
 }

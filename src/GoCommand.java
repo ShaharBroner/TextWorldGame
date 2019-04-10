@@ -13,6 +13,13 @@ public class GoCommand implements Command {
 
     @Override
     public boolean execute() {
-        return false;
+        boolean possible = p.moveToRoom(room);
+        if (possible == false) {
+            System.out.println("That is not possible, type: *look* to see where you can go");
+            return false;
+        } else {
+            System.out.println("You moved to " + room);
+            return true;
+        }
     }
 }
