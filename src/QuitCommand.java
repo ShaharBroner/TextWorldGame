@@ -6,6 +6,7 @@ public class QuitCommand implements Command {
 
     @Override
     public boolean execute() {
-        return false;
+        System.out.println("Goodbye!");
+        return true;
     }
 }
