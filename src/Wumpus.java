@@ -17,7 +17,18 @@ public class Wumpus extends Creature {
         if (playerRoom != null) {
             rooms.remove(playerRoom);
         }
+        searchSecondNeighbors(rooms);
         int random = (int) (Math.random() * rooms.size());
         setCurrentRoom(rooms.get(random));
+    }
+
+    private void searchSecondNeighbors(ArrayList<Level.Room> rooms) {
+        for (Level.Room r : rooms) {
+            ArrayList<Level.Room> neighbors = new ArrayList<>(r.getNeighbors().values());
+            Level.Room playerRoom = currentRoom.containsPlayer(neighbors, p);
+            if (playerRoom != null) {
+                rooms.remove(r);
+            }
+        }
     }
 }
