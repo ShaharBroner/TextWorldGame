@@ -11,7 +11,6 @@ public class Main {
     private static Level g = new Level();
 
     public static void main(String[] args) {
-        // TODO: 4/11/2019 let add room command add rooms with more than one word names.
         initCommands();
         initRooms();
         connectRooms();
@@ -27,66 +26,11 @@ public class Main {
             System.out.println("What do you want to do?");
             response = s.nextLine();
             Command command = lookUpCommand(response);
-            command.execute();
-            if (command instanceof EmptyCommand == false) {
+            if (command instanceof EmptyCommand == false && command.execute() != false) {
                 moveCreatures(creatures);
             } else {
                 showPossibleCommands();
             }
-//            String[] words = response.split(" ");
-//
-//            if (words[0].equals("go")) {
-//                String roomName = "";
-//                if (words.length >= 2) {
-//                    roomName = words[1];
-//                }
-//                boolean possible = p.moveToRoom(roomName);
-//                if (possible == false) {
-//                    System.out.println("That is not possible, type: *look* to see where you can go");
-//                } else {
-//                    System.out.println("You moved to " + roomName);
-//
-//                }
-//                moveCreatures(creatures);
-//            } else if (words[0].equals("look")) {
-//                moveCreatures(creatures);
-//                System.out.println(p.getCurrentRoom().getNeighborsNames());
-//                System.out.println(p.getCurrentRoom().displayItems());
-//            } else if (words[0].equals("add")) {
-//                moveCreatures(creatures);
-//                if (words.length < 3) {
-//                    System.out.println("Impossible!");
-//                } else {
-//                    if (words[1].equals("room")) {
-//                        String roomName = words[2];
-//                        g.addRoom(roomName);
-//                        g.addUndirectedEdge(p.getCurrentRoom().getName(), roomName);
-//                        System.out.println("Added path to " + roomName);
-//                    }
-//                }
-//                g.addDirectedEdge(p.getCurrentRoom().getName(), response.substring(9));
-//            } else if (words[0].equals("take")) {
-//                moveCreatures(creatures);
-//                ArrayList<Item> items = p.getCurrentRoom().getItems();
-//                for (Item i : items) {
-//                    if (words[1].equals(i.getName())) {
-//                        p.addItem(p.getCurrentRoom().removeItem(words[1]));
-//                        System.out.println("You took: " + words[1]);
-//                        break;
-//                    }
-//                }
-//            } else if (words[0].equals("drop")) {
-//                moveCreatures(creatures);
-//                ArrayList<Item> items = p.getItems();
-//                for (Item i : items) {
-//                    if (words[1].equals(i.getName())) {
-//                        p.getCurrentRoom().addItem(p.removeItem(words[1]));
-//                        System.out.println("You dropped: " + words[1]);
-//                        break;
-//                    }
-//                }
-//            } else if (response.equals("quit")) {
-//                System.out.println("Goodbye!");
         } while (!response.equals("quit"));
     }
 
@@ -140,12 +84,20 @@ public class Main {
         g.addUndirectedEdge("mall", "Gotham");
         g.addUndirectedEdge("Gotham", "space station");
         g.addUndirectedEdge("space station", "Krypton");
-        g.addDirectedEdge("Changaland", "portal room");
+        initPortalRoom();
+    }
+
+    private static void initPortalRoom() {
         g.addDirectedEdge("portal room", "hall");
         g.addDirectedEdge("portal room", "closet");
         g.addDirectedEdge("portal room", "dungeon");
         g.addDirectedEdge("portal room", "Atlantis");
         g.addDirectedEdge("portal room", "arena");
+        g.addDirectedEdge("portal room", "Changaland");
+        g.addDirectedEdge("portal room", "mall");
+        g.addDirectedEdge("portal room", "Gotham");
+        g.addDirectedEdge("portal room", "space station");
+        g.addDirectedEdge("portal room", "Krypton");
     }
 
     private static void initRooms() {
