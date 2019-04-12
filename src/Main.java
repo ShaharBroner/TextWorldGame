@@ -3,69 +3,23 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
+    final static int CHICKEN_NUMBER = 10;
+    final static int WUMPUS_NUMBER = 2;
+    final static int POPSTAR_NUMBER = 2;
     private static HashMap<String, Command> commands = new HashMap<>();
     private static Player p = new Player("Player 1", "A player");
     private static Level g = new Level();
 
     public static void main(String[] args) {
-        // TODO: 4/11/2019 fix add room command.
+        // TODO: 4/11/2019 let add room command add rooms with more than one word names.
         initCommands();
-        g.addRoom("hall", "A magical passage");
-        g.addRoom("closet", "A door to the unknown");
-        g.addRoom("dungeon", "Scary");
-        g.addRoom("Changaland", "A magical place");
-        g.addRoom("Atlantis", "Under water city");
-        g.addRoom("portal room", "this is interesting");
-        g.addRoom("arena", "where the best of the best fight");
-        g.addRoom("mall", "A place for shopping");
-        g.addRoom("space station", "fly to space!");
-        g.addRoom("Krypton", "A special planet");
-        g.addRoom("Gotham", "A dark city");
-
-        g.addUndirectedEdge("hall", "dungeon");
-        g.addUndirectedEdge("hall", "closet");
-        g.addUndirectedEdge("dungeon", "Changaland");
-        g.addUndirectedEdge("closet", "Atlantis");
-        g.addUndirectedEdge("Atlantis", "arena");
-        g.addUndirectedEdge("Changaland", "mall");
-        g.addUndirectedEdge("mall", "Gotham");
-        g.addUndirectedEdge("Gotham", "space station");
-        g.addUndirectedEdge("space station", "Krypton");
-        g.addDirectedEdge("Changaland", "portal room");
-        g.addDirectedEdge("portal room", "hall");
-        g.addDirectedEdge("portal room", "closet");
-        g.addDirectedEdge("portal room", "dungeon");
-        g.addDirectedEdge("portal room", "Atlantis");
-        g.addDirectedEdge("portal room", "arena");
-
+        initRooms();
+        connectRooms();
         p.setCurrentRoom(g.getRoom("hall"));
-
-        Item shirt = new Item("shirt");
-        Item ball = new Item("ball", "soccer ball");
-        Item key = new Item("key");
-        Item kryptonite = new Item("kryptonite");
-        Item shinyStone = new Item("shiny stone");
-        Item carrot = new Item("carrot");
-        Item trident = new Item("trident");
-        g.getRoom("Krypton").addItem(kryptonite);
-        g.getRoom("space station").addItem(shinyStone);
-        g.getRoom("Changaland").addItem(carrot);
-        g.getRoom("Atlantis").addItem(trident);
-        g.getRoom("hall").addItem(key);
-        g.getRoom("hall").addItem(ball);
-        g.getRoom("closet").addItem(shirt);
-        ArrayList<Creature> creatures = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            creatures.add(new Chicken(g.getRoom("portal room")));
-            if (i % 5 == 0) {
-                creatures.add(new Wumpus(p, g.getRoom("Atlantis")));
-                creatures.add(new PopStar(p, g.getRoom("Atlantis")));
-            }
-        }
-        String response = "";
+        createItems();
+        ArrayList<Creature> creatures = createCreatures(CHICKEN_NUMBER, WUMPUS_NUMBER, POPSTAR_NUMBER);
+        String response;
         Scanner s = new Scanner(System.in);
-
-
         do {
             System.out.println("You are in the " + p.getCurrentRoom().getName());
             displayCreaturesInRoom(creatures);
@@ -74,6 +28,11 @@ public class Main {
             response = s.nextLine();
             Command command = lookUpCommand(response);
             command.execute();
+            if (command instanceof EmptyCommand == false) {
+                moveCreatures(creatures);
+            } else {
+                showPossibleCommands();
+            }
 //            String[] words = response.split(" ");
 //
 //            if (words[0].equals("go")) {
@@ -128,15 +87,79 @@ public class Main {
 //                }
 //            } else if (response.equals("quit")) {
 //                System.out.println("Goodbye!");
-            if (command instanceof EmptyCommand) {
-                System.out.println("Type: *go <roomname>* to go to that room");
-                System.out.println("Type: *look* to see all neighbors and items (and creatures)");
-                System.out.println("Type: *add room <roomname>* to add that room");
-                System.out.println("Type: *take <itemname>* to take an item and remove it from the room");
-                System.out.println("Type: *drop <itemname>* to remove an item and add it to the room");
-                System.out.println("Type: *quit* to quit the game");
-            }
         } while (!response.equals("quit"));
+    }
+
+    private static void showPossibleCommands() {
+        System.out.println("Type: *go <roomname>* to go to that room");
+        System.out.println("Type: *look* to see all neighbors and items (and creatures)");
+        System.out.println("Type: *addRoom <roomname>* to add that room");
+        System.out.println("Type: *take <itemname>* to take an item and remove it from the room");
+        System.out.println("Type: *drop <itemname>* to remove an item and add it to the room");
+        System.out.println("Type: *quit* to quit the game");
+    }
+
+    private static ArrayList<Creature> createCreatures(int numChicken, int numWumpus, int numPopStar) {
+        ArrayList<Creature> creatures = new ArrayList<>();
+        for (int i = 0; i < numChicken; i++) {
+            creatures.add(new Chicken(g.getRoom("portal room")));
+        }
+        for (int i = 0; i < numWumpus; i++) {
+            creatures.add(new Wumpus(p, g.getRoom("Atlantis")));
+        }
+        for (int i = 0; i < numPopStar; i++) {
+            creatures.add(new PopStar(p, g.getRoom("Atlantis")));
+        }
+        return creatures;
+    }
+
+    private static void createItems() {
+        Item shirt = new Item("shirt");
+        Item ball = new Item("ball", "soccer ball");
+        Item key = new Item("key");
+        Item kryptonite = new Item("kryptonite");
+        Item shinyStone = new Item("shiny stone");
+        Item carrot = new Item("carrot");
+        Item trident = new Item("trident");
+        g.getRoom("Krypton").addItem(kryptonite);
+        g.getRoom("space station").addItem(shinyStone);
+        g.getRoom("Changaland").addItem(carrot);
+        g.getRoom("Atlantis").addItem(trident);
+        g.getRoom("hall").addItem(key);
+        g.getRoom("hall").addItem(ball);
+        g.getRoom("closet").addItem(shirt);
+    }
+
+    private static void connectRooms() {
+        g.addUndirectedEdge("hall", "dungeon");
+        g.addUndirectedEdge("hall", "closet");
+        g.addUndirectedEdge("dungeon", "Changaland");
+        g.addUndirectedEdge("closet", "Atlantis");
+        g.addUndirectedEdge("Atlantis", "arena");
+        g.addUndirectedEdge("Changaland", "mall");
+        g.addUndirectedEdge("mall", "Gotham");
+        g.addUndirectedEdge("Gotham", "space station");
+        g.addUndirectedEdge("space station", "Krypton");
+        g.addDirectedEdge("Changaland", "portal room");
+        g.addDirectedEdge("portal room", "hall");
+        g.addDirectedEdge("portal room", "closet");
+        g.addDirectedEdge("portal room", "dungeon");
+        g.addDirectedEdge("portal room", "Atlantis");
+        g.addDirectedEdge("portal room", "arena");
+    }
+
+    private static void initRooms() {
+        g.addRoom("hall", "A magical passage");
+        g.addRoom("closet", "A door to the unknown");
+        g.addRoom("dungeon", "Scary");
+        g.addRoom("Changaland", "A magical place");
+        g.addRoom("Atlantis", "Under water city");
+        g.addRoom("portal room", "this is interesting");
+        g.addRoom("arena", "where the best of the best fight");
+        g.addRoom("mall", "A place for shopping");
+        g.addRoom("space station", "fly to space!");
+        g.addRoom("Krypton", "A special planet");
+        g.addRoom("Gotham", "A dark city");
     }
 
     private static Command lookUpCommand(String response) {
@@ -153,7 +176,7 @@ public class Main {
     private static void initCommands() {
         commands.put("go", new GoCommand(p));
         commands.put("look", new LookCommand(p));
-        commands.put("add room", new AddRoomCommand(p, g));
+        commands.put("addRoom", new AddRoomCommand(p, g));
         commands.put("take", new TakeCommand(p));
         commands.put("drop", new DropCommand(p));
         commands.put("quit", new QuitCommand());
