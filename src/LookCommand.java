@@ -1,6 +1,8 @@
+import java.util.ArrayList;
+
 public class LookCommand implements Command {
     private Player p;
-    private Level.Room room;
+    private ArrayList<Level.Room> neighbors;
 
     public LookCommand(Player p) {
         this.p = p;
@@ -8,12 +10,14 @@ public class LookCommand implements Command {
 
     @Override
     public void init(String userString) {
-        room = p.getCurrentRoom();
+        neighbors = new ArrayList<>(p.getCurrentRoom().getNeighbors().values());
     }
 
     @Override
     public boolean execute() {
-        System.out.println(p.getCurrentRoom().getNeighborsNames());
+        for (Level.Room r : neighbors) {
+            System.out.println(r.getName() + ", " + r.getDescription() + ".");
+        }
         System.out.println(p.getCurrentRoom().displayItems());
         return true;
     }
