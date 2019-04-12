@@ -1,5 +1,4 @@
 public class AddRoomCommand implements Command {
-    final static private int INDEX_OF_ROOM_NAME = 1;
     private Player p;
     private Level g;
     private String room;
@@ -11,8 +10,7 @@ public class AddRoomCommand implements Command {
 
     @Override
     public void init(String userString) {
-        String[] words = userString.split(" ");
-        room = words[INDEX_OF_ROOM_NAME];
+        room = userString.substring(userString.indexOf(" ") + 1);
     }
 
     @Override
