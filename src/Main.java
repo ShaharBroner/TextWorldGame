@@ -108,7 +108,7 @@ public class Main {
             creatures.add(new Wumpus(p, g.getRoom("Atlantis")));
         }
         for (int i = 0; i < numPopStar; i++) {
-            creatures.add(new PopStar(p, g.getRoom("Atlantis")));
+            creatures.add(new PopStar(p, g.getRoom("mall")));
         }
         return creatures;
     }
