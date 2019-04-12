@@ -18,9 +18,9 @@ public class PopStar extends Creature {
             setCurrentRoom(playerRoom);
             return;
         }
-       if(searchSecondNeighbors(rooms)){
+        if (searchSecondNeighbors(rooms)) {
             return;
-       }
+        }
         int random = (int) (Math.random() * rooms.size());
         setCurrentRoom(rooms.get(random));
     }
