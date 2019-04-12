@@ -1,5 +1,5 @@
 public class AddRoomCommand implements Command {
-    final static private int INDEX_OF_ROOM_NAME = 2;
+    final static private int INDEX_OF_ROOM_NAME = 1;
     private Player p;
     private Level g;
     private String room;
